@@ -24,10 +24,8 @@ jobs:
       - name: Validate HTML syntax
         run: |
           echo "🔍 Validating HTML files..."
-          # Check if HTML files exist
           if ls *.html 1> /dev/null 2>&1; then
             echo "✅ HTML files found"
-            # Basic validation - check for closing tags
             for file in *.html; do
               echo "Checking $file..."
               if grep -q "</html>" "$file" && grep -q "</body>" "$file"; then
@@ -45,15 +43,16 @@ jobs:
       - name: Check CSS syntax
         run: |
           echo "🎨 Checking CSS..."
-          if grep -q "<style>" *.html; then
-            echo "✅ CSS found in HTML"
+          if grep -q "<style>" *.html 2>/dev/null || [ -f "*.css" ]; then
+            echo "✅ CSS found"
+          else
+            echo "✅ No CSS files (optional)"
           fi
 
       - name: Security scan
         run: |
           echo "🔒 Running security checks..."
-          # Check for common security issues
-          if grep -qi "eval(" *.html *.js 2>/dev/null; then
+          if find . -name "*.html" -o -name "*.js" | xargs grep -qi "eval(" 2>/dev/null; then
             echo "⚠️ Warning: eval() detected (potential security risk)"
           else
             echo "✅ No obvious security issues found"
@@ -62,13 +61,11 @@ jobs:
       - name: File size check
         run: |
           echo "📊 Checking file sizes..."
-          for file in *.html *.css *.js 2>/dev/null; do
-            if [ -f "$file" ]; then
-              size=$(wc -c < "$file")
-              echo "$file: $size bytes"
-              if [ $size -gt 1000000 ]; then
-                echo "⚠️ Warning: $file is larger than 1MB"
-              fi
+          find . -maxdepth 1 \( -name "*.html" -o -name "*.css" -o -name "*.js" \) -type f | while read file; do
+            size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
+            echo "$file: $size bytes"
+            if [ $size -gt 1000000 ]; then
+              echo "⚠️ Warning: $file is larger than 1MB"
             fi
           done
 
@@ -77,7 +74,7 @@ jobs:
           echo "✅ All CI checks passed!"
           echo "📦 Ready for deployment"
 
-  # CD Job - Continuous Deployment (Deploy to GitHub Pages)
+  # CD Job - Continuous Deployment
   continuous-deployment:
     name: Deploy to GitHub Pages
     needs: continuous-integration
@@ -93,7 +90,7 @@ jobs:
         with:
           path: .
 
-  # Publish Job - Publish to GitHub Pages
+  # Publish Job
   publish:
     name: Publish to Pages
     needs: continuous-deployment
@@ -112,4 +109,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-    
+     
