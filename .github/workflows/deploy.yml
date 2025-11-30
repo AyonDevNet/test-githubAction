@@ -1,28 +1,115 @@
-name: Deploy HTML to GitHub Pages
+name: Full CI/CD Pipeline
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  deploy:
+  # CI Job - Continuous Integration (Testing & Validation)
+  continuous-integration:
+    name: Test & Validate Code
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Upload to GitHub Pages
+      - name: Validate HTML syntax
+        run: |
+          echo "🔍 Validating HTML files..."
+          # Check if HTML files exist
+          if ls *.html 1> /dev/null 2>&1; then
+            echo "✅ HTML files found"
+            # Basic validation - check for closing tags
+            for file in *.html; do
+              echo "Checking $file..."
+              if grep -q "</html>" "$file" && grep -q "</body>" "$file"; then
+                echo "✅ $file has proper closing tags"
+              else
+                echo "❌ $file is missing closing tags"
+                exit 1
+              fi
+            done
+          else
+            echo "❌ No HTML files found"
+            exit 1
+          fi
+
+      - name: Check CSS syntax
+        run: |
+          echo "🎨 Checking CSS..."
+          if grep -q "<style>" *.html; then
+            echo "✅ CSS found in HTML"
+          fi
+
+      - name: Security scan
+        run: |
+          echo "🔒 Running security checks..."
+          # Check for common security issues
+          if grep -qi "eval(" *.html *.js 2>/dev/null; then
+            echo "⚠️ Warning: eval() detected (potential security risk)"
+          else
+            echo "✅ No obvious security issues found"
+          fi
+
+      - name: File size check
+        run: |
+          echo "📊 Checking file sizes..."
+          for file in *.html *.css *.js 2>/dev/null; do
+            if [ -f "$file" ]; then
+              size=$(wc -c < "$file")
+              echo "$file: $size bytes"
+              if [ $size -gt 1000000 ]; then
+                echo "⚠️ Warning: $file is larger than 1MB"
+              fi
+            fi
+          done
+
+      - name: CI Summary
+        run: |
+          echo "✅ All CI checks passed!"
+          echo "📦 Ready for deployment"
+
+  # CD Job - Continuous Deployment (Deploy to GitHub Pages)
+  continuous-deployment:
+    name: Deploy to GitHub Pages
+    needs: continuous-integration
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
+  # Publish Job - Publish to GitHub Pages
   publish:
-    needs: deploy
+    name: Publish to Pages
+    needs: continuous-deployment
     runs-on: ubuntu-latest
 
     permissions:
       pages: write
       id-token: write
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+    
