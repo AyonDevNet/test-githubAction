@@ -12,32 +12,35 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #12c2e9 0%, #c471ed 50%, #f64f59 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         .container {
             text-align: center;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 60px 80px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1s ease-in;
+            border-radius: 30px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease-in, float 3s ease-in-out infinite;
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
         
         h1 {
-            font-size: 4rem;
+            font-size: 4.5rem;
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #12c2e9 0%, #c471ed 50%, #f64f59 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         p {
-            font-size: 1.2rem;
-            color: #666;
+            font-size: 1.4rem;
+            color: #555;
             margin-top: 20px;
+            font-weight: 500;
         }
         
         @keyframes fadeIn {
@@ -50,12 +53,21 @@
                 transform: translateY(0);
             }
         }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Hello! 👋</h1>
-        <p>Welcome to my simple webpage</p>
+        <h1>Hello! 👋🌟</h1>
+        <p>🥳🎉 GitHub Actions is Working! 🚀</p>
     </div>
 </body>
 </html>
