@@ -39,6 +39,11 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Add cache-busting timestamp
+        run: echo "BUILD_TIME=$(date +%s)" >> dist/buildinfo.txt
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
