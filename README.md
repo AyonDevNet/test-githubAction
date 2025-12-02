@@ -1,21 +1,66 @@
-<<<<<<< HEAD
-this repo only for github Action testing
+# GitHub Actions R&D (React Project)
 
-=======
-# React + Vite
+This repository is dedicated to **R&D and experimentation with GitHub Actions** using a React-based project.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The purpose of this repo is to test, validate, and fine-tune CI/CD workflows before applying them to production systems.
 
-Currently, two official plugins are available:
+Live sites : https://ayondevnet.github.io/test-githubAction/
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎯 Purpose of This Repository
 
-## React Compiler
+This repo is intentionally used for:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Research & development of GitHub Actions workflows
+- Testing CI/CD pipelines for React applications
+- Experimenting with build, cache, and deployment strategies
+- Validating action behavior before using in production
+- Learning automation, security, and deployment best practices
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
->>>>>>> a93a8c2 (add-protfolio)
+## ⚙️ Tech Stack
+
+- React (Application Framework)
+- GitHub Actions (CI/CD)
+- Node.js & npm
+- Linux Runners (Ubuntu)
+- Git
+
+---
+
+## 🔄 CI/CD Scope
+
+Workflows in this repository may include:
+
+- Dependency installation testing
+- Build validation
+- Linting and formatting checks
+- Cache optimization testing
+- Deployment simulations
+- Workflow version testing
+- Rollback & troubleshooting experiments
+
+This repository does **not** represent production code.
+
+---
+
+## 🚨 Important Notes
+
+- Code may change frequently
+- Workflows may intentionally break for testing
+- History may be rewritten
+- Builds may be forced without notice
+- Caches may be deleted during experiments
+
+Use at your own risk if referencing this repository.
+
+---
+
+## 🛠 Local Development
+
+```bash
+git clone https://github.com/AyonDevNet/test-githubAction.git
+cd test-githubAction
+npm install
+npm start
